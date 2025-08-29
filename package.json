@@ -1,0 +1,8 @@
+{
+   "private": true,
+   "devDependencies": {
+      "@rbxts/ripple": "^0.10.0-alpha.3",
+      "@rbxts/vide": "^0.3.1",
+      "@rbxts/jecs": "^0.9.0-rc.12"
+   }
+}

@@ -1,0 +1,57 @@
+{
+   "name": "jecs-utils",
+   "globIgnorePaths": [
+      "**/default.project.json",
+      "node_modules/jecs-assemblies",
+      "node_modules/jecs-gizmo",
+      "node_modules/jecs-spring",
+      "node_modules/jecs-utils",
+      "node_modules/jecs-vide"
+   ],
+   "emitLegacyScripts": false,
+   "tree": {
+      "$className": "DataModel",
+      "ReplicatedStorage": {
+         "$className": "ReplicatedStorage",
+         "packages": {
+            "$className": "Folder",
+            "vide": {
+               "$path": "node_modules/@rbxts/vide"
+            },
+            "jecs": {
+               "$path": "node_modules/@rbxts/vide"
+            },
+            "ripple": {
+               "$path": "node_modules/@rbxts/ripple"
+            },
+            "jecs-assemblies": {
+               "$className": "Folder",
+               "src": { "$path": "packages/jecs-assemblies/src" },
+               "jecs": { "$path": "packages/jecs-assemblies/jecs.luau" }
+            },
+            "jecs-gizmo": {
+               "$className": "Folder",
+               "src": { "$path": "packages/jecs-gizmo/src" },
+               "jecs": { "$path": "packages/jecs-gizmo/jecs.luau" }
+            },
+            "jecs-spring": {
+               "$className": "Folder",
+               "src": { "$path": "packages/jecs-spring/src" },
+               "jecs": { "$path": "packages/jecs-spring/jecs.luau" },
+               "ripple": { "$path": "packages/jecs-spring/ripple.luau" }
+            },
+            "jecs-utils": {
+               "$className": "Folder",
+               "src": { "$path": "packages/jecs-utils/src" },
+               "jecs": { "$path": "packages/jecs-utils/jecs.luau" }
+            },
+            "jecs-vide": {
+               "$className": "Folder",
+               "src": { "$path": "packages/jecs-vide/src" },
+               "jecs": { "$path": "packages/jecs-vide/jecs.luau" },
+               "vide": { "$path": "packages/jecs-vide/vide.luau" }
+            }
+         }
+      }
+   }
+}
