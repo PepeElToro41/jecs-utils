@@ -46,23 +46,25 @@ function useQuery<T...>(query: Derivable<jecs.Query<...any>?>?): () -> { jecs.En
 		end)
 
 		monitor.removed(function(entity)
-			local index = entity_map[entity]
-			if not index then
-				return
-			end
-			entity_map[entity] = nil
-			local latest = table.remove(entities)
-			if not latest then
+			task.defer(function()
+				local index = entity_map[entity]
+				if not index then
+					return
+				end
+				entity_map[entity] = nil
+				local latest = table.remove(entities)
+				if not latest then
+					state(entities)
+					return
+				end
+				if latest == entity then
+					state(entities)
+					return
+				end
+				entities[index] = latest
+				entity_map[latest] = index
 				state(entities)
-				return
-			end
-			if latest == entity then
-				state(entities)
-				return
-			end
-			entities[index] = latest
-			entity_map[latest] = index
-			state(entities)
+			end)
 		end)
 
 		cleanup(monitor.disconnect)

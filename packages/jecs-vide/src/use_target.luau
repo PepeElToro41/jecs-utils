@@ -32,7 +32,9 @@ function useTarget<T>(entity: Derivable<jecs.Entity?>, relation: jecs.Id<T>)
 		end))
 		cleanup(exports.world:removed(relation, function(removed)
 			if removed == entity then
-				target(nil)
+				task.defer(function()
+					target(get_target(entity, relation))
+				end)
 			end
 		end))
 	end)

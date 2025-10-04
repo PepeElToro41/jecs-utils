@@ -23,12 +23,14 @@ function useEntityHas(entity: Derivable<jecs.Entity?>, tag: jecs.Entity)
 		is_tagged(get_tag(entity, tag))
 		cleanup(exports.world:added(tag, function(added)
 			if added == read(entity) then
-				is_tagged(true)
+				is_tagged(get_tag(entity, tag))
 			end
 		end))
 		cleanup(exports.world:removed(tag, function(removed)
 			if removed == read(entity) then
-				is_tagged(false)
+				task.defer(function()
+					is_tagged(get_tag(entity, tag))
+				end)
 			end
 		end))
 	end)
