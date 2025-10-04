@@ -19,7 +19,7 @@
                "$path": "node_modules/@rbxts/vide"
             },
             "jecs": {
-               "$path": "node_modules/@rbxts/vide"
+               "$path": "node_modules/@rbxts/jecs"
             },
             "ripple": {
                "$path": "node_modules/@rbxts/ripple"

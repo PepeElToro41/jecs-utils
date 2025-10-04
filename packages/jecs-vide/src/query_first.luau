@@ -1,6 +1,4 @@
-local jecs = require(script.Parent.Parent.jecs)
-
-function query_first<T...>(query: jecs.Query<T...>, predicator: (jecs.Entity, T...) -> boolean?): (jecs.Entity, T...)
+function query_first(query, predicator)
 	local iterator = query:iter()
 	if predicator then
 		while true do
