@@ -6,5 +6,6 @@ export type Query<T...> = jecs.Query<T...>
 export type Id<T = any> = jecs.Id<T>
 export type QueryInner = jecs.QueryInner
 export type Record = jecs.Record
+export type Archetype = jecs.Archetype
 
 return jecs

@@ -20,38 +20,69 @@ export type Monitor<T...> = {
 
 type QueryInner = jecs.Query<...any> & jecs.QueryInner
 
-local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity) -> ()): Observer<T...>
-	if getmetatable(query) == jecs.Query then
-		query:cached()
-	end
-
-	local world = (query :: Query<T...> & { world: World }).world
-	callback = callback
-
+local function get_matching_archetypes(world: jecs.World, query: jecs.Query<...any>)
 	local archetypes = {}
-	local terms = (query :: QueryInner).filter_with :: { jecs.Id }
-	local first = terms[1]
-
-	local observers_on_create = world.observable[jecs.ArchetypeCreate][first]
-	local observer_on_create = observers_on_create[#observers_on_create]
-	local query_on_create = observer_on_create.callback
-	observer_on_create.callback = function(archetype)
-		archetypes[archetype.id] = true
-		query_on_create(archetype)
-	end
-	local observers_on_delete = world.observable[jecs.ArchetypeDelete][first]
-	local observer_on_delete = observers_on_delete[#observers_on_delete]
-	local query_on_delete = observer_on_delete.callback
-	observer_on_delete.callback = function(archetype)
-		archetypes[archetype.id] = nil
-		query_on_delete(archetype)
-	end
-
-	local entity_index = world.entity_index :: any
+	local first = query.ids[1]
 
 	for _, archetype in query:archetypes() do
 		archetypes[archetype.id] = true
 	end
+
+	local observable = world.observable
+	local on_create_action = observable[jecs.ArchetypeCreate :: any]
+	if not on_create_action then
+		on_create_action = {} :: any
+		observable[jecs.ArchetypeCreate :: any] = on_create_action
+	end
+
+	local query_cache_on_create = on_create_action[first]
+	if not query_cache_on_create then
+		query_cache_on_create = {}
+		on_create_action[first] = query_cache_on_create
+	end
+
+	local on_delete_action = observable[jecs.ArchetypeDelete :: any]
+	if not on_delete_action then
+		on_delete_action = {} :: any
+		observable[jecs.ArchetypeDelete :: any] = on_delete_action
+	end
+	local query_cache_on_delete = on_delete_action[first]
+	if not query_cache_on_delete then
+		query_cache_on_delete = {}
+		on_delete_action[first] = query_cache_on_delete
+	end
+
+	local function on_create_callback(archetype: jecs.Archetype)
+		archetypes[archetype.id] = true
+	end
+
+	local function on_delete_callback(archetype: jecs.Archetype)
+		archetypes[archetype.id] = nil
+	end
+
+	local observer_for_create = { query = query :: any, callback = on_create_callback }
+	local observer_for_delete = { query = query :: any, callback = on_delete_callback }
+
+	table.insert(query_cache_on_create, observer_for_create)
+	table.insert(query_cache_on_delete, observer_for_delete)
+
+	local function disconnect()
+		table.remove(query_cache_on_create, table.find(query_cache_on_create, observer_for_create))
+		table.remove(query_cache_on_delete, table.find(query_cache_on_create, observer_for_delete))
+		table.clear(archetypes)
+	end
+
+	return archetypes, disconnect
+end
+
+local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity) -> ()): Observer<T...>
+	local world = (query :: Query<T...> & { world: World }).world
+	callback = callback
+
+	local terms = query.ids
+
+	local archetypes, disconnect_archetypes = get_matching_archetypes(world, query)
+	local entity_index = world.entity_index :: any
 
 	local function emplaced<a>(entity: jecs.Entity, id: jecs.Id<a>, value: a)
 		local r = entity_index.sparse_array[jecs.ECS_ID(entity)]
@@ -129,11 +160,7 @@ local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity) -
 	end
 
 	local function disconnect()
-		table.remove(observers_on_create, table.find(observers_on_create, observer_on_create))
-
-		table.remove(observers_on_delete, table.find(observers_on_delete, observer_on_delete))
-
-		table.clear(archetypes)
+		disconnect_archetypes()
 
 		for _, disconnect in cleanup do
 			disconnect()
@@ -148,35 +175,11 @@ local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity) -
 end
 
 local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
-	if getmetatable(query) == jecs.Query then
-		query:cached()
-	end
-
 	local world = (query :: Query<T...> & { world: World }).world
-
-	local archetypes = {}
-	local terms = (query :: QueryInner).filter_with :: { jecs.Id<any> }
-	local first = terms[1]
-
-	local observers_on_create = world.observable[jecs.ArchetypeCreate][first]
-	local observer_on_create = observers_on_create[#observers_on_create]
-	local query_on_create = observer_on_create.callback
-	observer_on_create.callback = function(archetype)
-		archetypes[archetype.id] = true
-		query_on_create(archetype)
-	end
-	local observers_on_delete = world.observable[jecs.ArchetypeDelete][first]
-	local observer_on_delete = observers_on_delete[#observers_on_delete]
-	local query_on_delete = observer_on_delete.callback
-	observer_on_delete.callback = function(archetype)
-		archetypes[archetype.id] = nil
-		query_on_delete(archetype)
-	end
-
-	for _, archetype in query:archetypes() do
-		archetypes[archetype.id] = true
-	end
+	local archetypes, disconnect_archetypes = get_matching_archetypes(world, query)
 	local entity_index = world.entity_index :: any
+
+	local terms = query.ids
 
 	local callback_added: ((jecs.Entity) -> ())?
 	local callback_removed: ((jecs.Entity) -> ())?
@@ -329,12 +332,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 	end
 
 	local function disconnect()
-		table.remove(observers_on_create, table.find(observers_on_create, observer_on_create))
-
-		table.remove(observers_on_delete, table.find(observers_on_delete, observer_on_delete))
-
-		table.clear(archetypes)
-
+		disconnect_archetypes()
 		for _, disconnect in cleanup do
 			disconnect()
 		end
