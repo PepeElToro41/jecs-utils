@@ -8,7 +8,10 @@ local useTarget = require(script.use_target)
 
 local jecs_vide = {
 	useEntityGet = useEntityGet.useEntityGet,
-	useComponent = useEntityHas.useEntityHas,
+	useEntityHas = useEntityHas.useEntityHas,
+	useQueryFirst = useQueryFirst.useQueryFirst,
+	useQuery = useQuery.useQuery,
+	useTarget = useTarget.useTarget,
 }
 
 function jecs_vide.world(world: jecs.World)

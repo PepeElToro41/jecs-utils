@@ -1,13 +1,15 @@
 local jecs = require(script.Parent.jecs)
 local common = require(script.common)
 
+local NONE = nil :: any
+
 local jecs_assemblies = {
 	transform = (nil :: any) :: jecs.Entity<CFrame>,
 	relative = (nil :: any) :: jecs.Entity<CFrame>,
 	pivot = (nil :: any) :: jecs.Entity,
-
-	world = (nil :: any) :: jecs.World,
 }
+
+local set_world = NONE :: jecs.World
 
 function remove_pivot(node: common.Node, parent: common.Node?)
 	local assembly = common.assemblies[node.assembly_index]
@@ -34,19 +36,25 @@ function remove_pivot(node: common.Node, parent: common.Node?)
 	end
 end
 
-function jecs_assemblies.init(world: jecs.World)
+function jecs_assemblies.world(world: jecs.World)
+	set_world = world
+
 	if not jecs_assemblies.transform then
-		jecs_assemblies.transform = world:component()
+		jecs_assemblies.transform = set_world:component()
+	end
+	if not jecs_assemblies.relative then
+		jecs_assemblies.relative = set_world:component()
 	end
 
-	jecs_assemblies.relative = world:component()
-	jecs_assemblies.pivot = world:entity()
+	if not jecs_assemblies.pivot then
+		jecs_assemblies.pivot = set_world:entity()
+	end
 
-	common.__alive_tracking__ = world:entity()
-	common.world = world
+	common.__alive_tracking__ = set_world:entity()
+	common.world = set_world
 
-	world:added(jecs_assemblies.pivot, function(entity: jecs.Entity, id)
-		local parent = jecs.pair_second(world, id)
+	set_world:added(jecs_assemblies.pivot, function(entity: jecs.Entity, id)
+		local parent = jecs.pair_second(set_world, id)
 		local parent_node = common.get_or_create_node(parent)
 
 		local node = common.nodes[entity]
@@ -84,7 +92,7 @@ function jecs_assemblies.init(world: jecs.World)
 				children = {},
 				parent = parent_node,
 			}
-			world:add(entity, common.__alive_tracking__)
+			set_world:add(entity, common.__alive_tracking__)
 			parent_node.children[new_node] = true
 
 			if push_assembly then
@@ -96,19 +104,19 @@ function jecs_assemblies.init(world: jecs.World)
 		end
 	end)
 
-	world:removed(jecs_assemblies.pivot, function(entity, id)
+	set_world:removed(jecs_assemblies.pivot, function(entity, id)
 		local node = common.nodes[entity]
 		if not node then
 			return
 		end
-		local parent = common.nodes[jecs.pair_second(world, id)]
+		local parent = common.nodes[jecs.pair_second(set_world, id)]
 		if node.parent == parent then
 			return
 		end
 		remove_pivot(node, parent)
 	end)
 
-	world:removed(common.__alive_tracking__, function(entity)
+	set_world:removed(common.__alive_tracking__, function(entity)
 		local node = common.nodes[entity]
 		if not node then
 			return
@@ -143,14 +151,12 @@ function jecs_assemblies.init(world: jecs.World)
 end
 
 function jecs_assemblies.system()
-	local world = jecs_assemblies.world
-
 	for _, assembly in common.assemblies do
 		if #assembly <= 1 then
 			continue
 		end
 
-		local start = world:get(assembly[1].entity, jecs_assemblies.transform) :: CFrame
+		local start = set_world:get(assembly[1].entity, jecs_assemblies.transform) :: CFrame
 		if not start then
 			continue
 		end
@@ -158,10 +164,10 @@ function jecs_assemblies.system()
 		local nodes: { common.Node } = {}
 
 		for index, node in assembly do
-			local relative = world:get(node.entity, jecs_assemblies.relative) or CFrame.identity
+			local relative = set_world:get(node.entity, jecs_assemblies.relative) or CFrame.identity
 			local final = (cframes[#cframes] or start) * relative
 
-			world:set(node.entity, jecs_assemblies.transform, final)
+			set_world:set(node.entity, jecs_assemblies.transform, final)
 			table.insert(nodes, node)
 			table.insert(cframes, final)
 

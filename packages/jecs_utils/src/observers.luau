@@ -120,7 +120,7 @@ local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity) -
 		end
 	end
 
-	local without = (query :: QueryInner).filter_without
+	local without: { jecs.Id<any> } = (query :: QueryInner).filter_without
 	if without then
 		for _, term in without do
 			if jecs.IS_PAIR(term) then
@@ -257,7 +257,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 		end
 	end
 
-	local without = (query :: QueryInner).filter_without
+	local without: { jecs.Id<any> } = (query :: QueryInner).filter_without
 	if without then
 		for _, term in without do
 			if jecs.IS_PAIR(term) then
