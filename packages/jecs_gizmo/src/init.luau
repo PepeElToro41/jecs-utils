@@ -8,6 +8,7 @@ type Debug = {
 	position: jecs.Entity<Style?>,
 	direction: jecs.Entity<Style?>,
 	distance: jecs.Entity<Style?>,
+	lookvector: jecs.Entity<Style?>,
 }
 
 local NONE = nil :: any
@@ -23,9 +24,6 @@ local gizmo = {
 }
 
 function gizmo.world(world: jecs.World)
-	if gizmo.debug then
-		return
-	end
 	set_world = world
 
 	local debug: Debug = {
@@ -41,6 +39,7 @@ function gizmo.world(world: jecs.World)
 		gizmo.queries.cframe = set_world:query(gizmo.cframe, debug.cframe):cached()
 		gizmo.queries.position_cframe = set_world:query(gizmo.cframe, debug.position):cached()
 		gizmo.queries.distance_cframe = set_world:query(gizmo.cframe, jecs.pair(debug.distance, jecs.Wildcard)):cached()
+		gizmo.queries.lookvector_cframe = set_world:query(gizmo.cframe, debug.lookvector):cached()
 	end
 	if gizmo.position then
 		gizmo.queries.position = set_world:query(gizmo.position, debug.position):cached()
@@ -95,6 +94,9 @@ function gizmo.system()
 				end
 			end
 		end
+		for _, cframe, style in gizmo.queries.lookvector_cframe:iter() do
+			lib.arrow.drawWithStyle(style, cframe.Position, cframe.Position + cframe.LookVector)
+		end
 	end
 	if gizmo.position then
 		for _, position, style in gizmo.queries.position:iter() do
@@ -125,7 +127,7 @@ function gizmo.system()
 	end
 	if gizmo.queries.direction_cframe then
 		for _, cframe, direction, style in gizmo.queries.direction_cframe:iter() do
-			lib.arrow.drawWithStyle(style, cframe.Position, cframe.Position + cframe.LookVector)
+			lib.arrow.drawWithStyle(style, cframe.Position, cframe.Position + direction)
 		end
 	end
 end
