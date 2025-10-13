@@ -1,6 +1,7 @@
 {
 	"name": "@rbxts/jecs-utils",
 	"version": "0.1.0",
+	"private": false,
 	"description": "Utilities for Jecs.",
 	"license": "MIT",
 	"main": "src/init.luau",
