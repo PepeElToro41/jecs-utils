@@ -27,6 +27,6 @@
 		"@rbxts/jecs": "*"
 	},
 	"peerDependencies": {
-		"@rbxts/ripple": "workspace:*"
+		"@rbxts/ripple": "*"
 	}
 }

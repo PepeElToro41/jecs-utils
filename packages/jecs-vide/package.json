@@ -28,6 +28,6 @@
 		"@rbxts/jecs-utils": "*"
 	},
 	"peerDependencies": {
-		"@rbxts/vide": "workspace:*"
+		"@rbxts/vide": "*"
 	}
 }
