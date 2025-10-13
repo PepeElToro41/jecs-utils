@@ -35,11 +35,12 @@ return {
 
 Use the components inside `jecs_gizmo.gizmo` to draw gizmos.
 
-    -  `jecs_gizmo.gizmo.cframe` for to draw CFrames. This draws the position and all of the direction vectors.
-    -  `jecs_gizmo.gizmo.position` for to draw positions, This also works with cframes, Drawing only the position.
-    -  `jecs_gizmo.gizmo.direction` for to draw directions. This also requires the component to have a position or cframe to draw where the direction starts from.
-    -  `jecs_gizmo.gizmo.distance` for to draw distances. This is used as a pair and it calculates the distance between the entity and the target. This requires both entities to have a position or cframe. And they can be mixed up. Like the entity having a cframe and the target having a position.
-    - `jecs_gizmo.gizmo.lookvector` for to draw the CFrame's LookVector as an arrow from the CFrame's position.
+-   `jecs_gizmo.gizmo.cframe` for to draw CFrames. This draws the position and all of the direction vectors.
+-   `jecs_gizmo.gizmo.position` for to draw positions, This also works with cframes, Drawing only the position.
+-   `jecs_gizmo.gizmo.direction` for to draw directions. This also requires the component to have a position or cframe to draw where the direction starts from.
+
+-   `jecs_gizmo.gizmo.distance` for to draw distances. This is used as a pair and it calculates the distance between the entity and the target. This requires both entities to have a position or cframe. And they can be mixed up. Like the entity having a cframe and the target having a position.
+-   `jecs_gizmo.gizmo.lookvector` for to draw the CFrame's LookVector as an arrow from the CFrame's position.
 
 ```luau
 local gizmo = require(jecs_gizmo).gizmo
