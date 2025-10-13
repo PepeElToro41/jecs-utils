@@ -1,5 +1,9 @@
 {
 	"private": true,
+	"scripts": {
+		"publish:npm": "pnpm publish -r --access public",
+		"publish:wally": "pnpm -r --workspace-concurrency 1 publish:wally"
+	},
 	"devDependencies": {
 		"@rbxts/compiler-types": "^2.3.0-types.1",
 		"@rbxts/types": "^1.0.781",
