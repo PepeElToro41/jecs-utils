@@ -1,0 +1,26 @@
+{
+	"name": "@rbxts/jecs-assemblies",
+	"version": "0.1.0",
+	"description": "Utility for calculating cframe offset chains for Jecs.",
+	"license": "MIT",
+	"main": "src/init.luau",
+	"types": "src/index.d.ts",
+	"files": [
+		"src",
+		"*.luau",
+		"!wally.toml",
+		"!wally.lock",
+		"!default.project.json"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/PepeElToro41/jecs-utils.git"
+	},
+	"scripts": {
+		"prepare": "cp ../../LICENSE.md .",
+		"publish:wally": "pnpm run prepare && wally publish"
+	},
+	"dependencies": {
+		"@rbxts/jecs": "*"
+	}
+}
