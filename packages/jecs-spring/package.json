@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/jecs-spring",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "Utility for running springs in Jecs.",
 	"license": "MIT",
 	"main": "src/init.luau",
@@ -19,6 +19,9 @@
 	"scripts": {
 		"prepare": "cp ../../LICENSE.md .",
 		"publish:wally": "pnpm run prepare && wally publish"
+	},
+	"publishConfig": {
+		"access": "public"
 	},
 	"dependencies": {
 		"@rbxts/jecs": "*"

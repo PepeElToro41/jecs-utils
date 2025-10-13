@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/jecs-gizmo",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"description": "Utility for debug gizmos for Jecs.",
 	"license": "MIT",
 	"main": "src/init.luau",
@@ -15,6 +15,9 @@
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/PepeElToro41/jecs-utils.git"
+	},
+	"publishConfig": {
+		"access": "public"
 	},
 	"scripts": {
 		"prepare": "cp ../../LICENSE.md .",

@@ -1,6 +1,6 @@
 [package]
 name = "pepeeltoro41/jecs-vide"
-version = "0.1.1"
+version = "1.0.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 exclude = [
@@ -14,4 +14,4 @@ exclude = [
 [dependencies]
 jecs = "ukendio/jecs@^0.9.0"
 vide = "centau/vide@^0.3.1"
-jecs-utils = "pepeeltoro41/jecs-utils@^0.1.1"
+jecs-utils = "pepeeltoro41/jecs-utils@^1.0.0"

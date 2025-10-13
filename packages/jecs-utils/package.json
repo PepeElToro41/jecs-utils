@@ -1,7 +1,6 @@
 {
 	"name": "@rbxts/jecs-utils",
-	"version": "0.1.0",
-	"private": false,
+	"version": "1.0.0",
 	"description": "Utilities for Jecs.",
 	"license": "MIT",
 	"main": "src/init.luau",
@@ -13,6 +12,9 @@
 		"!wally.lock",
 		"!default.project.json"
 	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/PepeElToro41/jecs-utils.git"
