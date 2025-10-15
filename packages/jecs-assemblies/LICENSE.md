@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2025 littensy
+Copyright (c) 2025 PepeElToro41
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
