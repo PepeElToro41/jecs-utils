@@ -34,14 +34,17 @@ function query_changed(query: jecs.Query<any>)
 	end)
 
 	local function iter()
-		local row = #iter_queue
+		local now_queue = iter_queue
+		local row = #now_queue
+
+		iter_queue = {}
+		iter_indexes = {}
+
 		return function(): jecs.Entity
 			if row == 0 then
-				table.clear(iter_queue)
-				table.clear(iter_indexes)
 				return nil :: any
 			end
-			local entity = iter_queue[row]
+			local entity = now_queue[row]
 			row -= 1
 			return entity
 		end

@@ -7,6 +7,12 @@ type ConnectionLike =
 	  }
 	| {
 			disconnect(): void;
+	  }
+	| {
+			Destroy(): void;
+	  }
+	| {
+			destroy(): void;
 	  };
 
 type CallbackFn<T extends Array<unknown>, R = void> = (...args: T) => R;
@@ -15,6 +21,12 @@ type EventLike<T extends Array<unknown>> =
 	| CallbackFn<T, ConnectionLike | undefined | void>
 	| {
 			Connect(callback: CallbackFn<T>): ConnectionLike;
+	  }
+	| {
+			connect(callback: CallbackFn<T>): ConnectionLike;
+	  }
+	| {
+			on(callback: CallbackFn<T>): ConnectionLike;
 	  };
 
 /** Returns the first entity in the query.
@@ -43,6 +55,7 @@ export function query_entities(query: Query<Id[]>): Entity[];
  * @param query: the query to get entities from
  * @returns iterator: an iterator with all the entities, can also manually iterate with .iter()
  */
+
 export function query_changed(query: Query<Id[]>): {
 	iter: () => IterableFunction<Entity>;
 	disconnect: () => void;
