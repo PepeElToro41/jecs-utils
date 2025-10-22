@@ -61,7 +61,9 @@ export function query_changed(query: Query<Id[]>): {
 	disconnect: () => void;
 } & IterableFunction<Entity>;
 
-export function collect<T extends Array<unknown>>(event: EventLike<T>): LuaTuple<[IterableFunction<T>, () => void]>;
+export function collect<T extends Array<unknown>>(
+	event: EventLike<T>,
+): LuaTuple<[IterableFunction<LuaTuple<[number, ...T]>>, () => void]>;
 
 export function interval(time: number): () => boolean;
 
@@ -71,6 +73,7 @@ interface Ref {
 	set: (key: defined, entity: Entity) => void;
 	find: (key: defined) => Entity | undefined;
 	delete: (key: defined) => void;
+	world: (world: World) => void;
 }
 
 export const ref: Ref;
