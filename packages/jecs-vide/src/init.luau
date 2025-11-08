@@ -22,6 +22,7 @@ local jecs_vide = {
 
 	__world = nil :: jecs.World?,
 }
+jecs_vide.default = jecs_vide
 
 function jecs_vide.world(world: jecs.World)
 	if jecs_utils.__world ~= world then

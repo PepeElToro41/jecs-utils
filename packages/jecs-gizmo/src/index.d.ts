@@ -31,11 +31,10 @@ interface JecsGizmo {
 	system: () => void;
 }
 
-declare const jecs_gizmo: JecsGizmo;
-
 export const gizmo: Gizmo;
 
 export function world(world: World): void;
 export function system(): void;
 
+declare const jecs_gizmo: JecsGizmo;
 export default jecs_gizmo;

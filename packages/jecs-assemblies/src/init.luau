@@ -10,6 +10,7 @@ local jecs_assemblies = {
 
 	__alive_tracking__ = NONE :: jecs.Entity,
 }
+jecs_assemblies.default = jecs_assemblies
 
 local set_world = NONE :: jecs.World
 

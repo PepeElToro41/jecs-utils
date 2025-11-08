@@ -13,6 +13,7 @@ local jecs_spring = {
 	__spring_controller = NONE :: jecs.Entity<jecs.Entity>,
 	__spring_target_info = NONE :: jecs.Entity<{ entity: jecs.Entity, component: jecs.Entity }>,
 }
+jecs_spring.default = jecs_spring
 
 local set_world = NONE :: jecs.World
 

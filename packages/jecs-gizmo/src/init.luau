@@ -22,6 +22,7 @@ local gizmo = {
 
 	gizmo = NONE :: Gizmo,
 }
+gizmo.default = gizmo
 
 function gizmo.world(world: jecs.World)
 	set_world = world

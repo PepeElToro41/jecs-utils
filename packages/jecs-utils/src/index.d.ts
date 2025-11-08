@@ -1,4 +1,4 @@
-import { Entity, Id, InferComponents, Query, World } from "@rbxts/jecs";
+import { Entity, Id, InferComponents, Query, Tag, World } from "@rbxts/jecs";
 
 type ConnectionLike =
 	| (() => void)
@@ -55,14 +55,15 @@ export function query_entities(query: Query<Id[]>): Entity[];
  * @param query: the query to get entities from
  * @returns iterator: an iterator with all the entities, can also manually iterate with .iter()
  */
-
 export function query_changed(query: Query<Id[]>): {
 	iter: () => IterableFunction<Entity>;
 	disconnect: () => void;
 } & IterableFunction<Entity>;
 
+export function query_random<T extends Id[]>(query: Query<T>): LuaTuple<[Entity, ...InferComponents<T>]>;
+
 export function collect<T extends Array<unknown>>(
-	event: EventLike<T>
+	event: EventLike<T>,
 ): LuaTuple<[IterableFunction<LuaTuple<[number, ...T]>>, () => void]>;
 
 export function interval(time: number): () => boolean;
@@ -97,7 +98,6 @@ interface JecsUtils {
 }
 export function world(world: World): void;
 
+export const is_a: Tag;
 declare const jecs_utils: JecsUtils;
-
 export default jecs_utils;
-
