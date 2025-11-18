@@ -99,5 +99,7 @@ interface JecsUtils {
 export function world(world: World): void;
 
 export const is_a: Tag;
+export const IsA: Tag;
+
 declare const jecs_utils: JecsUtils;
 export default jecs_utils;

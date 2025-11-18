@@ -23,6 +23,7 @@ local utils = {
 	interval = interval,
 	ref = ref,
 	is_a = is_a.is_a,
+	IsA = is_a.is_a,
 
 	observer = observers.observer,
 	monitor = observers.monitor,
