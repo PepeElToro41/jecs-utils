@@ -26,12 +26,12 @@ function use_target<T>(entity: Derivable<jecs.Entity?>, relation: jecs.Id<T>)
 		end
 
 		cleanup(exports.world:added(relation, function(added)
-			if added == entity then
+			if added == read(entity) then
 				target(get_target(entity, relation))
 			end
 		end))
 		cleanup(exports.world:removed(relation, function(removed)
-			if removed == entity then
+			if removed == read(entity) then
 				task.defer(function()
 					target(get_target(entity, relation))
 				end)

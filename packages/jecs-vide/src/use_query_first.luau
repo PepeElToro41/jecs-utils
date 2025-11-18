@@ -27,7 +27,9 @@ function use_query_first<T...>(query: Derivable<jecs.Query<T...>?>, predicator: 
 		local monitor = jecs_utils.monitor(queryobj)
 
 		monitor.added(function(e)
-			current(query_first(read(query), predicator :: any))
+			task.defer(function()
+				current(query_first(read(query), predicator :: any))
+			end)
 		end)
 		monitor.removed(function()
 			task.defer(function()
