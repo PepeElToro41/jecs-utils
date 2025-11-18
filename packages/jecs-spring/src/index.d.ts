@@ -7,7 +7,7 @@ interface JecsSpring {
 	completed: Tag;
 	motion: Entity<Entity>;
 
-	world: () => void;
+	world: (world: World) => void;
 	system: (delta: number) => void;
 }
 

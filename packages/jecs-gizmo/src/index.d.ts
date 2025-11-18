@@ -27,7 +27,7 @@ interface JecsGizmo {
 	enabled: boolean;
 	gizmo: Gizmo;
 
-	world: () => void;
+	world: (world: World) => void;
 	system: () => void;
 }
 

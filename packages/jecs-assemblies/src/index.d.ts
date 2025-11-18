@@ -5,7 +5,7 @@ interface JecsAssemblies {
 	relative: Entity<CFrame>;
 	pivot: Tag;
 
-	world: () => void;
+	world: (world: World) => void;
 	system: () => void;
 
 	__alive_tracking__: Tag;
