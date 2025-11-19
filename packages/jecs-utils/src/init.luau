@@ -37,6 +37,10 @@ function utils.world(world: jecs.World)
 
 	ref.world(world)
 	is_a.world(world)
+
+	utils.is_a = is_a.is_a
+	utils.IsA = is_a.is_a
 end
 
 return utils
+
