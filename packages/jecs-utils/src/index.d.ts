@@ -57,6 +57,7 @@ export function query_entities(query: Query<Id[]>): Entity[];
  */
 export function query_changed(query: Query<Id[]>): {
 	iter: () => IterableFunction<Entity>;
+	empty: () => boolean;
 	disconnect: () => void;
 } & IterableFunction<Entity>;
 

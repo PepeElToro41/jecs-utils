@@ -49,6 +49,10 @@ function query_changed(query: jecs.Query<any>)
 			return entity
 		end
 	end
+	local function empty()
+		return #iter_queue == 0
+	end
+
 	local function disconnect()
 		observer.disconnect()
 		monitor.disconnect()
@@ -56,6 +60,7 @@ function query_changed(query: jecs.Query<any>)
 
 	return setmetatable({
 		iter = iter,
+		empty = empty,
 		disconnect = disconnect,
 	}, {
 		__iter = iter,
