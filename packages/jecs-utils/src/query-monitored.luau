@@ -88,8 +88,8 @@ local function query_monitored(query: jecs.Query<any>)
 	end
 
 	return {
-		added = setmetatable({ iter = added_iter, disconnect = disconnect }, { __iter = added_iter }),
-		removed = setmetatable({ iter = removed_iter, disconnect = disconnect }, { __iter = removed_iter }),
+		added = added_iter,
+		removed = removed_iter,
 		disconnect = disconnect,
 	}
 end
