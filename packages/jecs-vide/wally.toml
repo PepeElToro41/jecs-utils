@@ -1,6 +1,6 @@
 [package]
 name = "pepeeltoro41/jecs-vide"
-version = "1.0.2"
+version = "1.0.3"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 exclude = [
