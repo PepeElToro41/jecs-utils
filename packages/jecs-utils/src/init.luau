@@ -5,6 +5,7 @@ local query_count = require(script["query-count"])
 local query_entities = require(script["query-entities"])
 local query_changed = require(script["query-changed"])
 local query_random = require(script["query-random"])
+local query_monitor = require(script["query-monitor"])
 
 local collect = require(script.collect)
 local interval = require(script.interval)
@@ -16,8 +17,9 @@ local utils = {
 	query_first = query_first,
 	query_count = query_count,
 	query_entities = query_entities,
-	query_changed = query_changed,
 	query_random = query_random,
+	query_changed = query_changed,
+	query_monitor = query_monitor,
 
 	collect = collect,
 	interval = interval,
@@ -43,4 +45,3 @@ function utils.world(world: jecs.World)
 end
 
 return utils
-

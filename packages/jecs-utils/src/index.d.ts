@@ -61,6 +61,12 @@ export function query_changed(query: Query<Id[]>): {
 	disconnect: () => void;
 } & IterableFunction<Entity>;
 
+export function query_monitor(query: Query<Id[]>): {
+	added: () => IterableFunction<Entity>;
+	removed: () => IterableFunction<Entity>;
+	disconnect: () => void;
+};
+
 export function query_random<T extends Id[]>(query: Query<T>): LuaTuple<[Entity, ...InferComponents<T>]>;
 
 export function collect<T extends Array<unknown>>(

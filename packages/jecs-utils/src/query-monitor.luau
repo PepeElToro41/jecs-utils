@@ -4,7 +4,7 @@ local observers = require(script.Parent.observers)
 --- Creates iterators tracking entities that entered or left a query's match.
 --- @param query: the query to monitor
 --- @return { added: an iterator with entities that started matching, removed: an iterator with entities that stopped matching }
-local function query_monitored(query: jecs.Query<any>)
+local function query_monitor(query: jecs.Query<any>)
 	local added_queue = {} :: { jecs.Entity }
 	local added_indexes = {} :: { [jecs.Entity]: number }
 
@@ -94,4 +94,4 @@ local function query_monitored(query: jecs.Query<any>)
 	}
 end
 
-return query_monitored
+return query_monitor
