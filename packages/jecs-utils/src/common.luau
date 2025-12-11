@@ -37,16 +37,8 @@ function common.observe_archetypes(
 		on_delete_action[first] = query_cache_on_delete
 	end
 
-	local function on_create_callback(archetype: jecs.Archetype)
-		added(archetype)
-	end
-
-	local function on_delete_callback(archetype: jecs.Archetype)
-		deleted(archetype)
-	end
-
-	local observer_for_create = { query = query :: any, callback = on_create_callback }
-	local observer_for_delete = { query = query :: any, callback = on_delete_callback }
+	local observer_for_create = { query = query :: any, callback = added }
+	local observer_for_delete = { query = query :: any, callback = deleted }
 
 	table.insert(query_cache_on_create, observer_for_create)
 	table.insert(query_cache_on_delete, observer_for_delete)
