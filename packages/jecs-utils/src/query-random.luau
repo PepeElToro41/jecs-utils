@@ -12,6 +12,10 @@ function query_random<T...>(query: jecs.Query<T...>): (jecs.Entity, T...)
 		size = size + #archetype.entities
 	end
 
+	if size == 0 then
+		return nil :: any
+	end
+
 	local random = math.random(1, size)
 	local target_row: number = nil :: any
 	local target_archetype: jecs.Archetype = nil :: any
@@ -27,7 +31,8 @@ function query_random<T...>(query: jecs.Query<T...>): (jecs.Entity, T...)
 		end
 		random -= #entities
 	end
-	if not random or not target_archetype then
+
+	if not target_archetype then
 		return nil :: any
 	end
 
