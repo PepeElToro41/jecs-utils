@@ -13,5 +13,5 @@ exclude = [
 
 [dependencies]
 jecs = "ukendio/jecs@^0.9.0"
-vide = "centau/vide@^0.3.1"
-jecs-utils = "pepeeltoro41/jecs-utils@^1.2.1"
+vide = "centau/vide@^0.4.0"
+jecs-utils = "pepeeltoro41/jecs-utils@^1.4.0"
