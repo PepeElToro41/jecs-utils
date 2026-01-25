@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/jecs-vide",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "Utilities for using Jecs with Vide.",
 	"license": "MIT",
 	"main": "src/init.luau",
