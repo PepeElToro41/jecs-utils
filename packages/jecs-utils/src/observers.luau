@@ -15,8 +15,8 @@ export type Observer<T...> = {
 
 export type Monitor<T...> = {
 	disconnect: () -> (),
-	added: ((jecs.Entity) -> ()) -> (),
-	removed: ((jecs.Entity) -> ()) -> (),
+	added: ((jecs.Entity, boolean?) -> ()) -> (Monitor<T...>),
+	removed: ((jecs.Entity, boolean?) -> ()) -> (Monitor<T...>),
 }
 
 type QueryInner = jecs.Query<...any> & jecs.QueryInner
@@ -40,7 +40,7 @@ local function get_matching_archetypes(world: jecs.World, query: jecs.Query<...a
 	return archetypes, disconnect
 end
 
-local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity) -> ()): Observer<T...>
+local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity, boolean?) -> ()): Observer<T...>
 	local world = (query :: Query<T...> & { world: World }).world
 	callback = callback
 
@@ -108,23 +108,23 @@ local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity) -
 			if jecs.IS_PAIR(term) then
 				local rel = jecs.ECS_PAIR_FIRST(term)
 
-				local onremoved = world:removed(rel, function(entity, id)
+				local onremoved = world:removed(rel, function(entity, id, destroying)
 					local r = jecs.record(world, entity)
 					local archetype = r.archetype
 					local dst = jecs.archetype_traverse_remove(world, id, archetype)
 
 					if archetypes[dst.id] and not archetypes[archetype.id] then
-						callback(entity)
+						callback(entity, destroying)
 					end
 				end)
 				table.insert(cleanup, onremoved)
 			else
-				local onremoved = world:removed(term, function(entity, id)
+				local onremoved = world:removed(term, function(entity, id, destroying)
 					local r = jecs.record(world, entity)
 					local archetype = r.archetype
 					local dst = jecs.archetype_traverse_remove(world, id, archetype)
 					if archetypes[dst.id] then
-						callback(entity)
+						callback(entity, destroying)
 					end
 				end)
 				table.insert(cleanup, onremoved)
@@ -152,20 +152,20 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 	local archetypes, disconnect_archetypes = get_matching_archetypes(world, query)
 	local terms: { jecs.Entity } = (query :: QueryInner).filter_with or query.ids
 
-	local callback_added: ((jecs.Entity) -> ())?
-	local callback_removed: ((jecs.Entity) -> ())?
+	local callback_added: ((jecs.Entity, boolean?) -> ())?
+	local callback_removed: ((jecs.Entity, boolean?) -> ())?
 
-	local function archetype_changed<a>(entity: jecs.Entity, src: jecs.Archetype, dst: jecs.Archetype)
+	local function archetype_changed<a>(entity: jecs.Entity, src: jecs.Archetype, dst: jecs.Archetype, destroying: boolean?)
 		if archetypes[dst.id] then
 			if not archetypes[src.id] then
 				if callback_added then
-					callback_added(entity)
+					callback_added(entity, destroying)
 				end
 			end
 		else
 			if archetypes[src.id] then
 				if callback_removed then
-					callback_removed(entity)
+					callback_removed(entity, destroying)
 				end
 			end
 		end
@@ -188,7 +188,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 					archetype_changed(entity, src, dst)
 				end
 			end)
-			local onremoved = world:removed(rel, function(entity, id)
+			local onremoved = world:removed(rel, function(entity, id, destroying)
 				if callback_removed == nil then
 					return
 				end
@@ -196,9 +196,9 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 				local src = r and r.archetype
 				local dst = src and jecs.archetype_traverse_remove(world, id, src)
 				if src then
-					archetype_changed(entity, src, dst)
+					archetype_changed(entity, src, dst, destroying)
 				else
-					callback_removed(entity)
+					callback_removed(entity, destroying)
 				end
 			end)
 			table.insert(cleanup, onadded)
@@ -215,7 +215,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 					archetype_changed(entity, src, dst)
 				end
 			end)
-			local onremoved = world:removed(term, function(entity)
+			local onremoved = world:removed(term, function(entity, id, destroying)
 				if callback_removed == nil then
 					return
 				end
@@ -223,7 +223,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 				local archetype = r and r.archetype
 
 				if not archetype or archetypes[archetype.id] then
-					callback_removed(entity)
+					callback_removed(entity, destroying)
 				end
 			end)
 			table.insert(cleanup, onadded)
@@ -248,7 +248,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 						archetype_changed(entity, src, dst)
 					end
 				end)
-				local onremoved = world:removed(rel, function(entity, id)
+				local onremoved = world:removed(rel, function(entity, id, destroying)
 					if callback_added == nil then
 						return
 					end
@@ -256,7 +256,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 					local src = r.archetype
 					local dst = src and jecs.archetype_traverse_remove(world, id, src)
 					if dst then
-						archetype_changed(entity, src, dst)
+						archetype_changed(entity, src, dst, destroying)
 					end
 				end)
 				table.insert(cleanup, onadded)
@@ -271,7 +271,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 						callback_removed(entity)
 					end
 				end)
-				local onremoved = world:removed(term, function(entity, id)
+				local onremoved = world:removed(term, function(entity, id, destroying)
 					if callback_added == nil then
 						return
 					end
@@ -279,7 +279,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 					local src = r.archetype
 					local dst = src and jecs.archetype_traverse_remove(world, id, src)
 					if dst then
-						archetype_changed(entity, src, dst)
+						archetype_changed(entity, src, dst, destroying)
 					end
 				end)
 				table.insert(cleanup, onadded)
@@ -295,19 +295,22 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 		end
 	end
 
+	local monitor = {
+		disconnect = disconnect,
+	} :: Monitor<T...>
+
 	local function monitor_added(callback)
 		callback_added = callback
+		return monitor
 	end
 
 	local function monitor_removed(callback)
 		callback_removed = callback
+		return monitor
 	end
 
-	local monitor = {
-		disconnect = disconnect,
-		added = monitor_added,
-		removed = monitor_removed,
-	} :: Monitor<T...>
+	monitor.added = monitor_added
+	monitor.removed = monitor_removed
 
 	return monitor
 end
