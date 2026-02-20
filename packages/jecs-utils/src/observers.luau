@@ -15,8 +15,8 @@ export type Observer<T...> = {
 
 export type Monitor<T...> = {
 	disconnect: () -> (),
-	added: ((jecs.Entity, boolean?) -> ()) -> (Monitor<T...>),
-	removed: ((jecs.Entity, boolean?) -> ()) -> (Monitor<T...>),
+	added: ((jecs.Entity, boolean?) -> ()) -> Monitor<T...>,
+	removed: ((jecs.Entity, boolean?) -> ()) -> Monitor<T...>,
 }
 
 type QueryInner = jecs.Query<...any> & jecs.QueryInner
@@ -108,23 +108,27 @@ local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity, b
 			if jecs.IS_PAIR(term) then
 				local rel = jecs.ECS_PAIR_FIRST(term)
 
-				local onremoved = world:removed(rel, function(entity, id, destroying)
+				local onremoved = world:removed(rel, function(entity, id, deleting)
 					local r = jecs.record(world, entity)
 					local archetype = r.archetype
-					local dst = jecs.archetype_traverse_remove(world, id, archetype)
+					local dst = if deleting
+						then world.ROOT_ARCHETYPE
+						else jecs.archetype_traverse_remove(world, id, archetype)
 
 					if archetypes[dst.id] and not archetypes[archetype.id] then
-						callback(entity, destroying)
+						callback(entity, deleting)
 					end
 				end)
 				table.insert(cleanup, onremoved)
 			else
-				local onremoved = world:removed(term, function(entity, id, destroying)
+				local onremoved = world:removed(term, function(entity, id, deleting)
 					local r = jecs.record(world, entity)
 					local archetype = r.archetype
-					local dst = jecs.archetype_traverse_remove(world, id, archetype)
+					local dst = if deleting
+						then world.ROOT_ARCHETYPE
+						else jecs.archetype_traverse_remove(world, id, archetype)
 					if archetypes[dst.id] then
-						callback(entity, destroying)
+						callback(entity, deleting)
 					end
 				end)
 				table.insert(cleanup, onremoved)
@@ -155,17 +159,17 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 	local callback_added: ((jecs.Entity, boolean?) -> ())?
 	local callback_removed: ((jecs.Entity, boolean?) -> ())?
 
-	local function archetype_changed<a>(entity: jecs.Entity, src: jecs.Archetype, dst: jecs.Archetype, destroying: boolean?)
+	local function archetype_changed<a>(entity: jecs.Entity, src: jecs.Archetype, dst: jecs.Archetype, deleting: boolean?)
 		if archetypes[dst.id] then
 			if not archetypes[src.id] then
 				if callback_added then
-					callback_added(entity, destroying)
+					callback_added(entity, deleting)
 				end
 			end
 		else
 			if archetypes[src.id] then
 				if callback_removed then
-					callback_removed(entity, destroying)
+					callback_removed(entity, deleting)
 				end
 			end
 		end
@@ -188,17 +192,19 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 					archetype_changed(entity, src, dst)
 				end
 			end)
-			local onremoved = world:removed(rel, function(entity, id, destroying)
+			local onremoved = world:removed(rel, function(entity, id, deleting)
 				if callback_removed == nil then
 					return
 				end
 				local r = jecs.record(world, entity)
 				local src = r and r.archetype
-				local dst = src and jecs.archetype_traverse_remove(world, id, src)
+				local dst = if deleting
+					then world.ROOT_ARCHETYPE
+					else src and jecs.archetype_traverse_remove(world, id, src)
 				if src then
-					archetype_changed(entity, src, dst, destroying)
+					archetype_changed(entity, src, dst, deleting)
 				else
-					callback_removed(entity, destroying)
+					callback_removed(entity, deleting)
 				end
 			end)
 			table.insert(cleanup, onadded)
@@ -215,7 +221,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 					archetype_changed(entity, src, dst)
 				end
 			end)
-			local onremoved = world:removed(term, function(entity, id, destroying)
+			local onremoved = world:removed(term, function(entity, id, deleting)
 				if callback_removed == nil then
 					return
 				end
@@ -223,7 +229,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 				local archetype = r and r.archetype
 
 				if not archetype or archetypes[archetype.id] then
-					callback_removed(entity, destroying)
+					callback_removed(entity, deleting)
 				end
 			end)
 			table.insert(cleanup, onadded)
@@ -248,15 +254,17 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 						archetype_changed(entity, src, dst)
 					end
 				end)
-				local onremoved = world:removed(rel, function(entity, id, destroying)
+				local onremoved = world:removed(rel, function(entity, id, deleting)
 					if callback_added == nil then
 						return
 					end
 					local r = jecs.record(world, entity)
 					local src = r.archetype
-					local dst = src and jecs.archetype_traverse_remove(world, id, src)
+					local dst = if deleting
+						then world.ROOT_ARCHETYPE
+						else src and jecs.archetype_traverse_remove(world, id, src)
 					if dst then
-						archetype_changed(entity, src, dst, destroying)
+						archetype_changed(entity, src, dst, deleting)
 					end
 				end)
 				table.insert(cleanup, onadded)
@@ -271,15 +279,17 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 						callback_removed(entity)
 					end
 				end)
-				local onremoved = world:removed(term, function(entity, id, destroying)
+				local onremoved = world:removed(term, function(entity, id, deleting)
 					if callback_added == nil then
 						return
 					end
 					local r = jecs.record(world, entity)
 					local src = r.archetype
-					local dst = src and jecs.archetype_traverse_remove(world, id, src)
+					local dst = if deleting
+						then world.ROOT_ARCHETYPE
+						else src and jecs.archetype_traverse_remove(world, id, src)
 					if dst then
-						archetype_changed(entity, src, dst, destroying)
+						archetype_changed(entity, src, dst, deleting)
 					end
 				end)
 				table.insert(cleanup, onadded)
