@@ -5,7 +5,7 @@ interface JecsSpring {
 	options: Entity<SpringOptions>;
 	goal: Tag;
 	completed: Tag;
-	motion: Entity<Entity>;
+	motion: Entity<Spring>;
 
 	world: (world: World) => void;
 	system: (delta: number) => void;
