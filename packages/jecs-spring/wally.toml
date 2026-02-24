@@ -1,16 +1,16 @@
 [package]
 name = "pepeeltoro41/jecs-spring"
-version = "1.0.1"
+version = "1.0.2"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 exclude = [
-    "node_modules",
-    "src/index.d.ts",
-    "package.json",
-    "jecs.luau",
-    "ripple.luau",
+   "node_modules",
+   "src/index.d.ts",
+   "package.json",
+   "jecs.luau",
+   "ripple.luau",
 ]
 
 [dependencies]
 ripple = "littensy/ripple@0.10.0-alpha.3"
-jecs = "ukendio/jecs@0.9.0"
+jecs = "ukendio/jecs@0.10.0"
