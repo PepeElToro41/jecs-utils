@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/jecs-assemblies",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Utility for calculating cframe offset chains for Jecs.",
 	"license": "MIT",
 	"main": "src/init.luau",
@@ -24,6 +24,6 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@rbxts/jecs": "*"
+		"@rbxts/jecs": "^0.10.0"
 	}
 }

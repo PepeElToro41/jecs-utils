@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/jecs-gizmo",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Utility for debug gizmos for Jecs.",
 	"license": "MIT",
 	"main": "src/init.luau",
