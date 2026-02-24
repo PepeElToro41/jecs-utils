@@ -24,7 +24,7 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@rbxts/jecs": "*"
+		"@rbxts/jecs": "^0.10.0"
 	},
 	"peerDependencies": {
 		"@rbxts/ripple": "*"

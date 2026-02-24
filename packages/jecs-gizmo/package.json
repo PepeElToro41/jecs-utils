@@ -24,6 +24,6 @@
 		"publish:wally": "pnpm run prepare && wally publish"
 	},
 	"dependencies": {
-		"@rbxts/jecs": "*"
+		"@rbxts/jecs": "^0.10.0"
 	}
 }

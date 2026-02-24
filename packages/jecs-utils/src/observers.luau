@@ -6,6 +6,8 @@ type World = jecs.World
 type Query<T...> = jecs.Query<T...>
 
 type Id<T = any> = jecs.Id<T>
+type Entity = jecs.Entity
+type Archetype = jecs.Archetype
 
 export type Iter<T...> = (Observer<T...>) -> () -> (jecs.Entity, T...)
 
@@ -124,6 +126,7 @@ local function observers_new<T...>(query: Query<T...>, callback: (jecs.Entity, b
 				local onremoved = world:removed(term, function(entity, id, deleting)
 					local r = jecs.record(world, entity)
 					local archetype = r.archetype
+
 					local dst = if deleting
 						then world.ROOT_ARCHETYPE
 						else jecs.archetype_traverse_remove(world, id, archetype)
@@ -186,6 +189,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 					return
 				end
 				local r = jecs.record(world, entity :: any)
+
 				local dst = r and r.archetype
 
 				if dst then
@@ -201,6 +205,7 @@ local function monitors_new<T...>(query: Query<T...>): Monitor<T...>
 				local dst = if deleting
 					then world.ROOT_ARCHETYPE
 					else src and jecs.archetype_traverse_remove(world, id, src)
+
 				if src then
 					archetype_changed(entity, src, dst, deleting)
 				else
