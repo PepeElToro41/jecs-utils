@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/jecs-spring",
-	"version": "1.0.2",
+	"version": "1.0.2-ts.1",
 	"description": "Utility for running springs in Jecs.",
 	"license": "MIT",
 	"main": "src/init.luau",
@@ -23,10 +23,8 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"dependencies": {
-		"@rbxts/jecs": "^0.10.0"
-	},
 	"peerDependencies": {
+		"@rbxts/jecs": "^0.10.0",
 		"@rbxts/ripple": "*"
 	}
 }

@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/jecs-utils",
-	"version": "1.4.1",
+	"version": "1.4.1-ts.1",
 	"description": "Utilities for Jecs.",
 	"license": "MIT",
 	"main": "src/init.luau",
@@ -23,7 +23,7 @@
 		"prepare": "cp ../../LICENSE.md .",
 		"publish:wally": "pnpm run prepare && wally publish"
 	},
-	"dependencies": {
+	"peerDependencies": {
 		"@rbxts/jecs": "^0.10.0"
 	}
 }

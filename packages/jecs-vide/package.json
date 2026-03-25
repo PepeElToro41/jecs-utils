@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/jecs-vide",
-	"version": "1.0.5",
+	"version": "1.0.5-ts.1",
 	"description": "Utilities for using Jecs with Vide.",
 	"license": "MIT",
 	"main": "src/init.luau",
@@ -23,11 +23,9 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"dependencies": {
-		"@rbxts/jecs": "^0.10.0",
-		"@rbxts/jecs-utils": "^1.4.1"
-	},
 	"peerDependencies": {
+		"@rbxts/jecs": "^0.10.0",
+		"@rbxts/jecs-utils": "^1.4.1",
 		"@rbxts/vide": "*"
 	}
 }
