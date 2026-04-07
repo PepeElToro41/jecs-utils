@@ -2,6 +2,7 @@ local jecs = require(script.Parent.Parent.jecs)
 
 type World = jecs.World
 type Query<T...> = jecs.Query<T...>
+type QueryInner = jecs.Query<...any> & jecs.QueryInner
 
 local common = {}
 
@@ -11,7 +12,8 @@ function common.observe_archetypes(
 	added: (archetype: jecs.Archetype) -> (),
 	deleted: (archetype: jecs.Archetype) -> ()
 )
-	local first = query.ids[1]
+	local with: { jecs.Entity } = (query :: QueryInner).filter_with
+	local first = with[1]
 
 	local observable = world.observable
 	local on_create_action = observable[jecs.ArchetypeCreate :: any]
