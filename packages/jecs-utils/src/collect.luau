@@ -24,7 +24,9 @@ local function collect<T...>(event: (listener: (T...) -> ()) -> Cleanup | Signal
 	local disconnect
 
 	if type(event) == "function" then
-		disconnect = event(function(...) end)
+		disconnect = event(function(...)
+			table.insert(storage, { ... })
+		end)
 	elseif type(event) == "table" then
 		if event.Connect then
 			disconnect = event:Connect(function(...)
