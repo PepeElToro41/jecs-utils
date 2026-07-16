@@ -70,6 +70,7 @@ end
 
 function world(wrld: jecs.World)
 	set_world = wrld
+	refs = {}
 end
 
 local metatable = {
